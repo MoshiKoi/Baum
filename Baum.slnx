@@ -4,5 +4,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Project Path="Baum.DB/Baum.DB.csproj" Id="49bbfc42-fe8b-4d2b-85fc-122a7ad78e24" />
   <Project Path="Baum/Baum.csproj" />
+  <Project Path="NotifyGenerator/NotifyGenerator.csproj" Id="51920785-fc5b-4c58-bddf-0168545b3f13" />
 </Solution>

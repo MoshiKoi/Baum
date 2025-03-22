@@ -15,6 +15,15 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="{Binding OpenProjectCommand}"/>
+                <MenuItem Header="_Open"/>
+                <Separator/>
+                <MenuItem Header="_Exit"/>
+            </MenuItem>
+        </Menu>
+        <ContentControl Content="{Binding Content}"/>
+    </DockPanel>
 </Window>
