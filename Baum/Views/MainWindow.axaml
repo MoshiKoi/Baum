@@ -9,21 +9,22 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Baum">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
 
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_New" Command="{Binding OpenProjectCommand}"/>
-                <MenuItem Header="_Open"/>
-                <Separator/>
-                <MenuItem Header="_Exit"/>
-            </MenuItem>
-        </Menu>
-        <ContentControl Content="{Binding Content}"/>
-    </DockPanel>
+  <DockPanel>
+    <Menu DockPanel.Dock="Top">
+      <MenuItem Header="_File">
+        <MenuItem Header="_New" Command="{Binding OpenProjectCommand}"/>
+        <MenuItem Header="_Open"/>
+        <MenuItem Header="_Save" Command="{Binding SaveCommand}"/>
+        <Separator/>
+        <MenuItem Header="_Exit"/>
+      </MenuItem>
+    </Menu>
+    <ContentControl Content="{Binding Content}"/>
+  </DockPanel>
 </Window>

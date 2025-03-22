@@ -4,46 +4,39 @@ using System.Collections.ObjectModel;
 using System.IO;
 using NotifyGenerator;
 using Baum.DB;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Diagnostics;
 
 namespace Baum.ViewModels;
 
-public partial class ProjectViewModel : ViewModelBase
+public partial class ProjectViewModel : ViewModelBase, ISavableViewModel
 {
     public string? FilePath { get; set; }
     public string TempFilePath { get; set; }
 
     [Notify]
-    public partial string TextBoxContent { get; set; } = string.Empty;
-
-    public ObservableCollection<WordViewModel> Words { get; set; } = [];
-
+    public partial ViewModelBase Content { get; set; }
     public ProjectViewModel(string? filePath = null)
     {
         FilePath = filePath;
         TempFilePath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 
-        if (FilePath != null)
-        {
-            File.Copy(FilePath, TempFilePath);
-        }
-        LoadWords();
-    }
-
-    void LoadWords()
-    {
-        Words.Clear();
-
-        using var context = new ProjectContext(TempFilePath);
-
-        foreach (var word in context.Words)
-        {
-            Words.Add(new WordViewModel { Form = word.Form });
-        }
+        Content = new ProjectForestViewModel(this, TempFilePath);
     }
 
     [RelayCommand]
-    public void AddWord()
+    public void Save()
     {
-        Words.Add(new WordViewModel { Form = TextBoxContent });
+        if (FilePath != null)
+        {
+            File.Copy(TempFilePath, FilePath, overwrite: true);
+        }
+    }
+
+    public void OpenLanguage(int languageId)
+    {
+        Content = new LanguageViewModel(TempFilePath, languageId);
     }
 }

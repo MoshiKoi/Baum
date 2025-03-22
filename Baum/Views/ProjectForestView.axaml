@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Baum.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:ProjectForestViewModel"
+             x:Class="Baum.Views.ProjectForestView">
+  <StackPanel>
+    <TextBox Text="{Binding TextBoxContent}"/>
+    <Button Content="Add" Command="{Binding AddLanguageCommand}"/>
+    <ItemsControl ItemsSource="{Binding Languages}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="vm:LanguageItemViewModel">
+          <StackPanel>
+            <TextBlock Text="{Binding Name}"/>
+            <Button Content="Open"
+              Command="{Binding OpenLanguageCommand}"
+              CommandParameter="{Binding LanguageId}"/>
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </StackPanel>
+</UserControl>

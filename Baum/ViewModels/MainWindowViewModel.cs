@@ -20,4 +20,15 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         Content = new ProjectViewModel();
     }
+
+    bool CanSave()
+    {
+        return Content is ISavableViewModel;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSave))]
+    void Save()
+    {
+        ((ISavableViewModel)Content).SaveCommand.Execute(null);
+    }
 }

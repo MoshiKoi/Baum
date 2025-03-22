@@ -5,11 +5,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:ProjectViewModel"
-             x:Class="Baum.Views.ProjectView">
-  <StackPanel>
-    <TextBox Text="{Binding TextBoxContent}"/>
-    <Button Content="Add" Command="{Binding AddWordCommand}"/>
-    <ItemsControl ItemsSource="{Binding Words}">
-    </ItemsControl>
-  </StackPanel>
+             x:Class="Baum.Views.ProjectView"
+             Content="{Binding Content}">
 </UserControl>

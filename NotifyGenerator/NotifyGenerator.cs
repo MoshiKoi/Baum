@@ -52,11 +52,13 @@ namespace NotifyGenerator
         {
             if (prop == null) { return; }
 
+            PropertyInfo value = prop.Value;
+
             context.AddSource(
-                $"NotifyGenerator.{prop.Value.PropertyName}.g.cs",
-                @$"namespace {prop.Value.NamespaceName} {{
-    partial class {prop.Value.ClassName} {{
-        public partial {prop.Value.PropertyType} {prop.Value.PropertyName} {{
+                $"NotifyGenerator.{value.NamespaceName}.{value.ClassName}.{value.PropertyName}.g.cs",
+                @$"namespace {value.NamespaceName} {{
+    partial class {value.ClassName} {{
+        public partial {value.PropertyType} {value.PropertyName} {{
             get => field;
             set => SetProperty(ref field, value);
         }}
