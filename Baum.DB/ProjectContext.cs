@@ -8,6 +8,7 @@ public class ProjectContext : DbContext
 {
     public DbSet<Language> Languages { get; set; }
     public DbSet<Word> Words { get; set; }
+    public DbSet<SoundChange> SoundChanges { get; set; }
     public string DbPath { get; }
 
     public ProjectContext(string _)
@@ -21,6 +22,19 @@ public class ProjectContext : DbContext
     // special "local" folder for your platform.
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
+}
+
+public class ProjectContextFactory : IDbContextFactory<ProjectContext>
+{
+    string _path;
+    public ProjectContextFactory(string path)
+    {
+        _path = path;
+    }
+    public ProjectContext CreateDbContext()
+    {
+        return new ProjectContext(_path);
+    }
 }
 
 public class ProjectContextDesignTimeFactory : IDesignTimeDbContextFactory<ProjectContext>

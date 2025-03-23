@@ -4,11 +4,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="vm:ProjectForestViewModel"
-             x:Class="Baum.Views.ProjectForestView">
+             x:DataType="vm:ProjectTreeViewModel"
+             x:Class="Baum.Views.ProjectTreeView">
   <StackPanel>
-    <TextBox Text="{Binding TextBoxContent}"/>
-    <Button Content="Add" Command="{Binding AddLanguageCommand}"/>
-    <ItemsControl ItemsSource="{Binding Languages}"/>
+    <Button Content="{Binding Name}"
+            Command="{Binding OpenCommand}"/>
+    <Button Content="Add Child"
+            Command="{Binding AddChildCommand}"/>
+    <ItemsControl ItemsSource="{Binding Children}"/>
   </StackPanel>
 </UserControl>

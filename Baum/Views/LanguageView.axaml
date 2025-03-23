@@ -7,6 +7,9 @@
              x:DataType="vm:LanguageViewModel"
              x:Class="Baum.Views.LanguageView">
   <StackPanel>
+    <AutoCompleteBox ItemsSource="{Binding Languages}"/>
+    <TextBlock Text="Sound Changes"/>
+    <TextBlock Text="Words"/>
     <TextBox Text="{Binding TextBoxContent}"/>
     <Button Content="Add" Command="{Binding AddWordCommand}"/>
     <ItemsControl ItemsSource="{Binding Words}">

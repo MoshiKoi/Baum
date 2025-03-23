@@ -7,24 +7,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using Baum.DB;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
 using NotifyGenerator;
 
 namespace Baum.ViewModels;
 
 public partial class ProjectForestViewModel : ViewModelBase
 {
+    IDbContextFactory<ProjectContext> _dbContextFactory;
+
     ProjectViewModel Project { get; }
-    public string TempFilePath { get; }
 
     [Notify]
     public partial string TextBoxContent { get; set; } = string.Empty;
 
-    public ObservableCollection<LanguageItemViewModel> Languages { get; set; } = [];
+    public ObservableCollection<ProjectTreeViewModel> Languages { get; set; } = [];
 
     public ProjectForestViewModel(ProjectViewModel project, string tempFilePath)
     {
+        _dbContextFactory = new ProjectContextFactory(tempFilePath);
         Project = project;
-        TempFilePath = tempFilePath;
         LoadLanguages();
     }
 
@@ -32,23 +34,20 @@ public partial class ProjectForestViewModel : ViewModelBase
     {
         Languages.Clear();
 
-        using var context = new ProjectContext(TempFilePath);
+        using var context = _dbContextFactory.CreateDbContext();
 
         foreach (var language in context.Languages)
         {
-            Languages.Add(new LanguageItemViewModel
-            {
-                Parent = this,
-                LanguageId = language.Id,
-                Name = language.Name
-            });
+            var model = new ProjectTreeViewModel(_dbContextFactory, language.Id, language.Name);
+            model.OnOpen += (_, id) => OpenLanguage(id);
+            Languages.Add(model);
         }
     }
 
     [RelayCommand]
     public async Task AddLanguage(CancellationToken cancellationToken)
     {
-        using var context = new ProjectContext(TempFilePath);
+        using var context = _dbContextFactory.CreateDbContext();
 
         await context.Languages.AddAsync(new Language { Name = TextBoxContent }, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);

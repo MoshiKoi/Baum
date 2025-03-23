@@ -12,15 +12,24 @@ using System.Threading;
 
 namespace Baum.ViewModels;
 
+public class LanguageSelectorItem
+{
+    public string Name { get; set; }
+    public int LanguageId { get; set; }
+}
+
 public partial class LanguageViewModel : ViewModelBase
 {
     public string TempFilePath { get; set; }
     public int LanguageId { get; set; }
 
+    public ObservableCollection<LanguageSelectorItem> Languages { get; set; } = [];
+
     public LanguageViewModel(string tempFilePath, int languageId)
     {
         TempFilePath = tempFilePath;
         LanguageId = languageId;
+        LoadLanguages();
         LoadWords();
     }
 
@@ -29,6 +38,22 @@ public partial class LanguageViewModel : ViewModelBase
     public partial string TextBoxContent { get; set; } = string.Empty;
 
     public ObservableCollection<WordViewModel> Words { get; set; } = [];
+
+    void LoadLanguages()
+    {
+        Languages.Clear();
+
+        using var context = new ProjectContext(TempFilePath);
+
+        foreach (var language in context.Languages)
+        {
+            Languages.Add(new LanguageSelectorItem
+            {
+                LanguageId = language.Id,
+                Name = language.Name
+            });
+        }
+    }
 
     void LoadWords()
     {

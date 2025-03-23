@@ -2,6 +2,7 @@
 using Baum.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Baum.DB.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    partial class ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20250323022626_CreateSoundChange")]
+    partial class CreateSoundChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -87,7 +90,7 @@ namespace Baum.DB.Migrations
             modelBuilder.Entity("Baum.DB.Language", b =>
                 {
                     b.HasOne("Baum.DB.Language", "Parent")
-                        .WithMany("Children")
+                        .WithMany()
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
@@ -107,7 +110,7 @@ namespace Baum.DB.Migrations
             modelBuilder.Entity("Baum.DB.Word", b =>
                 {
                     b.HasOne("Baum.DB.Language", "Language")
-                        .WithMany("Words")
+                        .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -123,11 +126,7 @@ namespace Baum.DB.Migrations
 
             modelBuilder.Entity("Baum.DB.Language", b =>
                 {
-                    b.Navigation("Children");
-
                     b.Navigation("SoundChanges");
-
-                    b.Navigation("Words");
                 });
 #pragma warning restore 612, 618
         }
