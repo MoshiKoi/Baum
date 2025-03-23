@@ -7,10 +7,23 @@
              x:DataType="vm:LanguageViewModel"
              x:Class="Baum.Views.LanguageView">
   <StackPanel>
-    <AutoCompleteBox ItemsSource="{Binding Languages}"/>
     <TextBlock Text="Sound Changes"/>
+    <TextBox Text="{Binding SoundChangeInput}"/>
+    <Button Content="Add" Command="{Binding AddSoundChangeCommand}"/>
+    <ItemsControl ItemsSource="{Binding SoundChanges}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="vm:SoundChangeViewModel">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Notation}"/>
+            <Button Content="Delete"
+                    Command="{Binding $parent[UserControl].((vm:LanguageViewModel)DataContext).RemoveSoundChangeCommand}"
+                    CommandParameter="{Binding}"/>
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
     <TextBlock Text="Words"/>
-    <TextBox Text="{Binding TextBoxContent}"/>
+    <TextBox Text="{Binding WordInput}"/>
     <Button Content="Add" Command="{Binding AddWordCommand}"/>
     <ItemsControl ItemsSource="{Binding Words}">
       <ItemsControl.ItemTemplate>

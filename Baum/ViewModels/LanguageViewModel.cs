@@ -23,34 +23,36 @@ public partial class LanguageViewModel : ViewModelBase
     public string TempFilePath { get; set; }
     public int LanguageId { get; set; }
 
-    public ObservableCollection<LanguageSelectorItem> Languages { get; set; } = [];
+    [Notify]
+    public partial string SoundChangeInput { get; set; } = string.Empty;
+
+    public ObservableCollection<SoundChangeViewModel> SoundChanges { get; set; } = [];
+
+    [Notify]
+    public partial string WordInput { get; set; } = string.Empty;
+
+    public ObservableCollection<WordViewModel> Words { get; set; } = [];
 
     public LanguageViewModel(string tempFilePath, int languageId)
     {
         TempFilePath = tempFilePath;
         LanguageId = languageId;
-        LoadLanguages();
+        LoadSoundChanges();
         LoadWords();
     }
 
-
-    [Notify]
-    public partial string TextBoxContent { get; set; } = string.Empty;
-
-    public ObservableCollection<WordViewModel> Words { get; set; } = [];
-
-    void LoadLanguages()
+    void LoadSoundChanges()
     {
-        Languages.Clear();
+        SoundChanges.Clear();
 
         using var context = new ProjectContext(TempFilePath);
 
-        foreach (var language in context.Languages)
+        foreach (var soundChange in context.SoundChanges.Where(_ => _.LanguageId == LanguageId))
         {
-            Languages.Add(new LanguageSelectorItem
+            SoundChanges.Add(new SoundChangeViewModel
             {
-                LanguageId = language.Id,
-                Name = language.Name
+                Id = soundChange.Id,
+                Notation = soundChange.Notation
             });
         }
     }
@@ -68,6 +70,32 @@ public partial class LanguageViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    public async Task AddSoundChange(CancellationToken cancellationToken)
+    {
+        using var context = new ProjectContext(TempFilePath);
+
+        await context.SoundChanges.AddAsync(new SoundChange
+        {
+            LanguageId = LanguageId,
+            Notation = SoundChangeInput
+        }, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        LoadSoundChanges();
+    }
+
+    [RelayCommand]
+    async Task RemoveSoundChange(SoundChangeViewModel soundChange)
+    {
+        using var context = new ProjectContext(TempFilePath);
+
+        var entity = context.SoundChanges.Find(soundChange.Id) ?? throw new Exception("Sound change doesn't exist");
+        context.Remove(entity);
+        await context.SaveChangesAsync();
+        SoundChanges.Remove(soundChange);
+    }
+
+    [RelayCommand]
     public async Task AddWord(CancellationToken cancellationToken)
     {
         using var context = new ProjectContext(TempFilePath);
@@ -75,7 +103,7 @@ public partial class LanguageViewModel : ViewModelBase
         await context.Words.AddAsync(new Word
         {
             LanguageId = LanguageId,
-            Form = TextBoxContent
+            Form = WordInput
         }, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
